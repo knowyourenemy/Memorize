@@ -21,6 +21,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
+            Text("Memorize!").font(.largeTitle)
             ScrollView {
                 cards
             }
@@ -31,9 +32,9 @@ struct ContentView: View {
     }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]){
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]){
             if let currentTheme = currentTheme {
-                ForEach(0..<cardCount, id: \.self) { index in
+                ForEach(0..<currentTheme.count, id: \.self) { index in
                     CardView(content: currentTheme[index])
                         .aspectRatio(2/3, contentMode: .fit)
                 }
@@ -52,8 +53,9 @@ struct ContentView: View {
     
     func themePicker(label: String, symbol: String, theme: Array<String>) -> some View {
             Button(action: {
-                currentTheme = theme
                 cardCount = Int.random(in: minPairCount...maxPairCount)
+                currentTheme = Array(theme[0..<cardCount]).flatMap(){[$0, $0]}
+                currentTheme?.shuffle()
             }, label: {
                 VStack {
                     Image(systemName: symbol).imageScale(.large).font(.largeTitle).frame(height: 50)
@@ -78,7 +80,7 @@ struct ContentView: View {
 
 struct CardView: View {
     var content: String
-    @State var isFaceUp = true
+    @State var isFaceUp = false
     
     var body: some View {
         ZStack {
