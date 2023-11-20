@@ -8,79 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
-    let halloweenTheme: Array<String> = ["👻", "🎃", "🕷️", "😈", "💀", "🕸️", "🧙‍♀️", "🙀", "👹", "😱", "☠️", "🍭"]
-    let vehicleTheme: Array<String> = ["🚗", "🚀", "✈️", "🚎", "🚛", "🚊", "🚡", "🛳️", "🚑", "🚁", "🚲", "🛴"]
-    let faceTheme: Array<String> = ["😀", "😁", "😆", "🥹", "😅", "😂", "🥲", "🙃", "😉", "🤪", "😘", "😒"]
-    let minPairCount = 4
-    let maxPairCount = 12
-    
-    
-    @State var currentTheme: Array<String>?
-    
-    @State var cardCount = 0
+    let emojis: Array<String> = ["👻", "🎃", "🕷️", "😈", "💀", "🕸️", "🧙‍♀️", "🙀", "👹", "😱", "☠️", "🍭"]
     
     var body: some View {
-        VStack {
-            Text("Memorize!").font(.largeTitle)
-            ScrollView {
-                cards
-            }
-                Spacer()
-                themePickers
+        ScrollView {
+            cards
         }
         .padding()
     }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))]){
-            if let currentTheme = currentTheme {
-                ForEach(0..<currentTheme.count, id: \.self) { index in
-                    CardView(content: currentTheme[index])
-                        .aspectRatio(2/3, contentMode: .fit)
-                }
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 85))]){
+            ForEach(emojis.indices, id: \.self) { index in
+                CardView(content: emojis[index])
+                    .aspectRatio(2/3, contentMode: .fit)
             }
         }.foregroundColor(.orange)
     }
-    
-    var themePickers: some View {
-        HStack(spacing: 50) {
-            halloweenThemePicker
-            vehicleThemePicker
-            faceThemePicker
-        }
-
-    }
-    
-    func themePicker(label: String, symbol: String, theme: Array<String>) -> some View {
-            Button(action: {
-                cardCount = Int.random(in: minPairCount...maxPairCount)
-                currentTheme = Array(theme[0..<cardCount]).flatMap(){[$0, $0]}
-                currentTheme?.shuffle()
-            }, label: {
-                VStack {
-                    Image(systemName: symbol).imageScale(.large).font(.largeTitle).frame(height: 50)
-                    Text(label)
-                }
-            })
-//        .disabled(cardCount + offset < 1 || cardCount + offset > currentTheme.count)
-    }
-    
-    var halloweenThemePicker: some View {
-        themePicker(label: "Halloween", symbol: "star.fill", theme: halloweenTheme)
-    }
-    
-    var vehicleThemePicker: some View {
-        themePicker(label: "Vehicle", symbol: "car.fill", theme: vehicleTheme)
-    }
-    
-    var faceThemePicker: some View {
-        themePicker(label: "Face", symbol: "face.smiling.fill", theme: faceTheme)
-    }
 }
+    
 
 struct CardView: View {
     var content: String
-    @State var isFaceUp = false
+    @State var isFaceUp = true
     
     var body: some View {
         ZStack {
