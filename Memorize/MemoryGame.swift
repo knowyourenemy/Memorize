@@ -9,6 +9,8 @@ import Foundation
 
 struct MemoryGame<CardContent: Equatable> {
     private(set) var cards: Array<Card>
+    private var previouslySeenCardIDs: Set<String> = []
+    var score: Int = 0
     
     init(numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
         cards = []
@@ -18,11 +20,18 @@ struct MemoryGame<CardContent: Equatable> {
             cards.append(Card(content: content, id: "\(pairIndex+1)a"))
             cards.append(Card(content: content, id: "\(pairIndex+1)b"))
         }
+        cards.shuffle()
+        print(cards)
     }
     
     var indexOfOneAndOnlyFaceUpCard: Int? {
         get { cards.indices.filter { index in cards[index].isFaceUp }.only }
-        set { cards.indices.forEach { cards[$0].isFaceUp = (newValue == $0) } }
+        set { cards.indices.forEach {
+            if cards[$0].isFaceUp {
+                previouslySeenCardIDs.insert(cards[$0].id)
+            }
+            cards[$0].isFaceUp = (newValue == $0)
+        } }
     }
     
     mutating func choose(_ card: Card){
@@ -30,8 +39,16 @@ struct MemoryGame<CardContent: Equatable> {
             if !cards[chosenIndex].isFaceUp && !cards[chosenIndex].isMatched {
                 if let potentialMatchIndex = indexOfOneAndOnlyFaceUpCard {
                     if cards[chosenIndex].content == cards[potentialMatchIndex].content {
+                        score += 2
                         cards[chosenIndex].isMatched = true
                         cards[potentialMatchIndex].isMatched = true
+                    } else {
+                        if previouslySeenCardIDs.contains(cards[chosenIndex].id) {
+                            score -= 1
+                        }
+                        if previouslySeenCardIDs.contains(cards[potentialMatchIndex].id) {
+                            score -= 1
+                        }
                     }
                 } else {
                     indexOfOneAndOnlyFaceUpCard = chosenIndex
@@ -45,12 +62,17 @@ struct MemoryGame<CardContent: Equatable> {
         cards.shuffle()
     }
     
-    struct Card: Equatable, Identifiable {
+    struct Card: Equatable, Identifiable, CustomDebugStringConvertible {
+        
         var isFaceUp = false
         var isMatched = false
         let content: CardContent
         
         var id: String
+        
+        var debugDescription: String {
+            return "\(content)"
+        }
     }
 }
 

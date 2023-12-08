@@ -13,11 +13,15 @@ struct EmojiMemoryGameView: View {
     var body: some View {
         VStack {
             Text(viewModel.themeName)
+            Text(String(viewModel.score))
             ScrollView {
                 cards
                     .animation(.default, value: viewModel.cards)
             }
             .padding()
+            Button("New Game"){
+                viewModel.newGame()
+            }
         }
     }
     
@@ -31,9 +35,7 @@ struct EmojiMemoryGameView: View {
                         viewModel.choose(card)
                     }
             }
-        }.foregroundColor(viewModel.themeColor).onAppear {
-            viewModel.shuffle()
-        }
+        }.foregroundColor(viewModel.themeColor)
     }
 }
     
