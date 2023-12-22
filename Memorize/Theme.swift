@@ -7,7 +7,9 @@
 
 import SwiftUI
 
-struct Theme {
+struct Theme: Hashable, Identifiable {
+    var id: String { name }
+    
     let name: String;
     let emojis: Array<String>;
     let numberOfPairs: Int;

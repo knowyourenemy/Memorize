@@ -65,5 +65,5 @@ struct CardView: View {
 }
 
 #Preview {
-    EmojiMemoryGameView(viewModel: EmojiMemoryGame())
+    EmojiMemoryGameView(viewModel: EmojiMemoryGame(theme: ThemeStore.builtins.first!))
 }
