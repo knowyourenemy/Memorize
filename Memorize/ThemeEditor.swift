@@ -13,7 +13,7 @@ struct ThemeEditor: View {
     
     init(theme: Binding<Theme>) {
         self._theme = theme
-        emojis = theme.emojis.wrappedValue.joined()
+        _emojis = State(initialValue: theme.wrappedValue.emojis.joined())
         
     }
     

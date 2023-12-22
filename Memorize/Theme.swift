@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct Theme: Hashable, Identifiable {
-    var id: String { name }
-    
+    var id = UUID()
     var name: String;
     var emojis: Array<String>;
     var numberOfPairs: Int;
