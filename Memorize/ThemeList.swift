@@ -19,6 +19,10 @@ struct ThemeList: View {
                     NavigationLink(value: theme) {
                         Text(theme.name)
                             .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                Button("Delete", role: .destructive) {
+                                        store.themes.removeAll(where: {$0.id == theme.id})
+                                }
+                                .tint(.red)
                                 Button("Edit") {
                                     selectedThemeID = theme.id
                                     showPaletteEditor = true
@@ -34,7 +38,18 @@ struct ThemeList: View {
             .navigationDestination(for: Theme.self) { theme in
                 EmojiMemoryGameView(viewModel: EmojiMemoryGame(theme: theme))
             }
+            .toolbar {
+                Button {
+                    let theme = Theme(name: "", emojis: ["🐴", "🦈"], numberOfPairs: 2, color: "red")
+                    store.themes.append(theme)
+                    selectedThemeID = theme.id
+                    showPaletteEditor = true
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
         }
+        
         .sheet(isPresented: $showPaletteEditor) { [selectedThemeID] in
             if let selectedThemeID = selectedThemeID, let theme = getBindingToThemeWithID(selectedThemeID) {
                 ThemeEditor(theme: theme)
@@ -45,7 +60,6 @@ struct ThemeList: View {
     private func getBindingToThemeWithID(_ id: Theme.ID) -> Binding<Theme>? {
         let themeIndex = store.themes.firstIndex(where: { $0.id == id })
         if let themeIndex {
-            print($store.themes[themeIndex])
             return $store.themes[themeIndex]
         } else {
             return nil

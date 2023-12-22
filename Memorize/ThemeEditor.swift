@@ -25,7 +25,9 @@ struct ThemeEditor: View {
             }
             Section(header: Text("Emojis")) {
                 TextField("Emojis", text: $emojis).onChange(of: emojis) {
-                    theme.emojis = emojis.split(separator: "").map(String.init)
+                    if emojis.count >= 2 {
+                        theme.emojis = emojis.split(separator: "").map(String.init)
+                    }
                 }
             }
             Section(header: Text("Details")) {

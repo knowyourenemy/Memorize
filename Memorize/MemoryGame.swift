@@ -21,7 +21,6 @@ struct MemoryGame<CardContent: Equatable> {
             cards.append(Card(content: content, id: "\(pairIndex+1)b"))
         }
         cards.shuffle()
-        print(cards)
     }
     
     var indexOfOneAndOnlyFaceUpCard: Int? {
