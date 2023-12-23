@@ -39,16 +39,7 @@ class EmojiMemoryGame: ObservableObject {
     }
     
     var themeColor: Color {
-        switch theme.color {
-        case "orange": 
-            return .orange
-        case "blue":
-            return .blue
-        case "brown":
-            return .brown
-        default:
-            return .green
-        }
+        Color(rgba: theme.color)
     }
     
     var themeName: String {

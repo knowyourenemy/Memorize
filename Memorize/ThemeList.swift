@@ -40,7 +40,7 @@ struct ThemeList: View {
             }
             .toolbar {
                 Button {
-                    let theme = Theme(name: "", emojis: ["🐴", "🦈"], numberOfPairs: 2, color: "red")
+                    let theme = Theme(name: "", emojis: ["🐴", "🦈"], numberOfPairs: 2, color: RGBA(color: .red))
                     store.themes.append(theme)
                     selectedThemeID = theme.id
                     showPaletteEditor = true
