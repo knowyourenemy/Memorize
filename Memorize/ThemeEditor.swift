@@ -10,11 +10,12 @@ import SwiftUI
 struct ThemeEditor: View {
     @Binding var theme: Theme
     @State var emojis: String
+    @State var color: CGColor
     
     init(theme: Binding<Theme>) {
         self._theme = theme
         _emojis = State(initialValue: theme.wrappedValue.emojis.joined())
-        
+        _color = State(initialValue: CGColor(red: theme.wrappedValue.color.red, green: theme.wrappedValue.color.green, blue: theme.wrappedValue.color.blue, alpha: theme.wrappedValue.color.alpha))
     }
     
     
@@ -38,6 +39,9 @@ struct ThemeEditor: View {
                     }
                 }
                 .pickerStyle(.menu)
+                ColorPicker("Color", selection: $color).onChange(of: color) {
+                    theme.color = RGBA(color: Color(color))
+                }
                 
             }
         }
