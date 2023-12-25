@@ -7,6 +7,21 @@
 
 import SwiftUI
 
+extension UserDefaults {
+    func themes(forKey key: String) -> [Theme] {
+        if let jsonData = data(forKey: key),
+           let decodedThemes = try? JSONDecoder().decode([Theme].self, from: jsonData) {
+            return decodedThemes
+        } else {
+            return []
+        }
+    }
+    func set(_ themes: [Theme], forKey key: String) {
+        let data = try? JSONEncoder().encode(themes)
+        set(data, forKey: key)
+    }
+}
+
 class ThemeStore: ObservableObject {
     static let builtins = [
         Theme(
@@ -28,7 +43,23 @@ class ThemeStore: ObservableObject {
             color: RGBA(color: .brown)
         )
     ]
-    @Published var themes = builtins
+    var themes: [Theme] {
+        get {
+            UserDefaults.standard.themes(forKey: "Themes")
+        }
+        set {
+            if !newValue.isEmpty {
+                UserDefaults.standard.set(newValue, forKey: "Themes")
+                objectWillChange.send()
+            }
+        }
+    }
+    
+    init() {
+        if themes.isEmpty {
+            themes = ThemeStore.builtins
+        }
+    }
 
 }
 
