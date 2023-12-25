@@ -17,7 +17,7 @@ struct ThemeList: View {
             List {
                 ForEach(store.themes) { theme in
                     NavigationLink(value: theme) {
-                        Text(theme.name)
+                        ThemeListItem(theme: theme)
                             .swipeActions(edge: .leading, allowsFullSwipe: false) {
                                 Button("Delete", role: .destructive) {
                                         store.themes.removeAll(where: {$0.id == theme.id})
@@ -53,6 +53,24 @@ struct ThemeList: View {
         .sheet(isPresented: $showPaletteEditor) { [selectedThemeID] in
             if let selectedThemeID = selectedThemeID, let theme = getBindingToThemeWithID(selectedThemeID) {
                 ThemeEditor(theme: theme)
+            }
+        }
+    }
+    
+    private struct ThemeListItem: View {
+        var theme: Theme
+        var body: some View {
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(theme.name).font(.title)
+                    Spacer()
+                    Text("\(theme.numberOfPairs) Pairs.")
+                }
+                
+                HStack {
+                    
+                    Text(theme.emojis.joined()).lineLimit(1)
+                }
             }
         }
     }
